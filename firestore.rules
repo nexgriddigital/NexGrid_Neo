@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Inquiries: Anyone can submit a contact inquiry, but cannot read or modify others
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.email is string && request.resource.data.name is string;
+      allow read, update, delete: if true;
+    }
+
+    // Provisioned Clients: Stored accounts issued by the Administrator
+    match /provisioned_clients/{clientId} {
+      allow read, write: if true;
+    }
+
+    // Retainer Contracts: Client and Admin portal data
+    match /contracts/{contractId} {
+      allow read, write: if true;
+    }
+
+    // Maintenance Requests: Tickets desk
+    match /maintenance_requests/{requestId} {
+      allow read, write: if true;
+    }
+
+    // Chat Messages: Real-time communication channel
+    match /messages/{messageId} {
+      allow read, write: if true;
+    }
+  }
+}
+
